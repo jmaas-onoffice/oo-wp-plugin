@@ -78,11 +78,11 @@ class FormFieldValidator
 
 		foreach ($formFields as $fieldName => $module) {
 			$name = $this->_pSearchcriteriaFields->getFieldNameOfInput($fieldName);
-			$pField = $pFieldsCollection->getFieldByModuleAndName($module, $name);
+			$pField = $pFieldsCollection->getFieldByModuleAndName((string)$module, $name);
 			$dataType = $pField->getType();
 
 			if (!$this->isEmptyValue($fieldName, $dataType)) {
-				$value = $this->getValueFromRequest($dataType, $fieldName, $module);
+				$value = $this->getValueFromRequest($dataType, $fieldName, (string)$module);
 				$sanitizedData[$fieldName] = $this->getValidatedValue($value, $pField);
 			}
 		}

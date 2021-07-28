@@ -59,7 +59,7 @@ class DefaultValueRead
 		$query = $this->createBaseQuery($formId, $pField);
 		$row = $this->_pWPDB->get_row($query, ARRAY_A);
 		$pDataModel = new DefaultValueModelSingleselect($formId, $pField);
-		$pDataModel->setDefaultsId((int)$row['defaults_id'] ?? 0);
+		$pDataModel->setDefaultsId(isset($row['defaults_id']) ? (int)$row['defaults_id'] : 0);
 		$pDataModel->setValue($row['value'] ?? '');
 		return $pDataModel;
 	}
@@ -89,8 +89,8 @@ class DefaultValueRead
 		$query = $this->createBaseQuery($formId, $pField);
 		$row = $this->_pWPDB->get_row($query, ARRAY_A);
 		$pDataModel = new DefaultValueModelBool($formId, $pField);
-		$pDataModel->setDefaultsId((int)$row['defaults_id'] ?? 0);
-		$pDataModel->setValue((bool)intval($row['value']));
+		$pDataModel->setDefaultsId(isset($row['defaults_id']) ? (int)$row['defaults_id'] : 0);
+		$pDataModel->setValue((bool)intval($row['value'] ?? 0));
 		return $pDataModel;
 	}
 

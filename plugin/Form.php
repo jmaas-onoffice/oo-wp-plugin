@@ -211,9 +211,8 @@ class Form
 	private function filterActiveInputFields($inputs): array
 	{
 		$activeInputs = [];
-
 		foreach ($inputs as $name => $module) {
-			if ($this->_pFieldsCollection->containsFieldByModule($module, $name)) {
+			if ($this->_pFieldsCollection->containsFieldByModule((string)$module, (string)$name)) {
 				$activeInputs[$name] = $module;
 			}
 		}

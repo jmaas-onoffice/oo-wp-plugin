@@ -34,6 +34,7 @@ use onOffice\WPlugin\Form\CaptchaHandler;
 use onOffice\WPlugin\Form\FormFieldValidator;
 use onOffice\WPlugin\Form\FormPostConfiguration;
 use onOffice\WPlugin\Types\FieldsCollection;
+use function DI\string;
 
 /**
  *
@@ -244,7 +245,7 @@ abstract class FormPost
 		$activeFields = [];
 
 		foreach ($fields as $name => $module) {
-			if ($this->_pFieldsCollection->containsFieldByModule($module, $name)) {
+			if ($this->_pFieldsCollection->containsFieldByModule((string)$module, (string)$name)) {
 				$activeFields[$name] = $module;
 			}
 		}

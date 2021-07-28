@@ -86,7 +86,6 @@ class FormPostContact
 		$pFormConfig = $pFormData->getDataFormConfiguration();
 		$recipient = $pFormConfig->getRecipient();
 		$subject = $pFormConfig->getSubject();
-
 		try {
 			if ($pFormConfig->getCreateAddress()) {
 				$this->createAddress($pFormData);
@@ -148,7 +147,6 @@ class FormPostContact
 		$pAPIClientAction->setParameters(['register' => true]);
 		$pAPIClientAction->setResourceId($addressId);
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
-
 		if (!$pAPIClientAction->getResultStatus()) {
 			throw new ApiClientException($pAPIClientAction);
 		}
@@ -189,7 +187,6 @@ class FormPostContact
 			($pSDKWrapper, onOfficeSDK::ACTION_ID_DO, 'contactaddress');
 		$pAPIClientAction->setParameters($requestParams);
 		$pAPIClientAction->addRequestToQueue()->sendRequests();
-
 		if (!$pAPIClientAction->getResultStatus()) {
 			throw new ApiClientException($pAPIClientAction);
 		}
