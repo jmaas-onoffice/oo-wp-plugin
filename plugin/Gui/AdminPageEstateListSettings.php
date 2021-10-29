@@ -89,16 +89,8 @@ class AdminPageEstateListSettings
 
 		$pInputModelFilter = $pFormModelBuilder->createInputModelFilter();
 		$pInputModelRecordsPerPage = $pFormModelBuilder->createInputModelRecordsPerPage();
-		$pInputModelSortBy = $pFormModelBuilder->createInputModelSortBy(onOfficeSDK::MODULE_ESTATE);
-		$pInputModelSortOrder = $pFormModelBuilder->createInputModelSortOrder();
 		$pInputModelListType = $pFormModelBuilder->createInputModelListType();
 		$pInputModelShowStatus = $pFormModelBuilder->createInputModelShowStatus();
-		$pInputModelRandomSort = $pFormModelBuilder->createInputModelRandomSort();
-
-		$pInputModelSortBySetting = $pFormModelBuilder->createInputModelSortBySetting();
-		$pInputModelSortByChosen = $pFormModelBuilder->createInputModelSortByChosen();
-		$pInputModelSortByDefault = $pFormModelBuilder->createInputModelSortByDefault();
-		$pInputModelSortByspec = $pFormModelBuilder->createInputModelSortBySpec();
 
 		$pFormModelRecordsFilter = new FormModel();
 		$pFormModelRecordsFilter->setPageSlug($this->getPageSlug());
@@ -106,16 +98,11 @@ class AdminPageEstateListSettings
 		$pFormModelRecordsFilter->setLabel(__('Filters & Records', 'onoffice-for-wp-websites'));
 		$pFormModelRecordsFilter->addInputModel($pInputModelFilter);
 		$pFormModelRecordsFilter->addInputModel($pInputModelRecordsPerPage);
-		$pFormModelRecordsFilter->addInputModel($pInputModelSortBySetting);
-		$pFormModelRecordsFilter->addInputModel($pInputModelSortByChosen);
-		$pFormModelRecordsFilter->addInputModel($pInputModelSortByDefault);
-		$pFormModelRecordsFilter->addInputModel($pInputModelSortByspec);
-		$pFormModelRecordsFilter->addInputModel($pInputModelSortBy);
-		$pFormModelRecordsFilter->addInputModel($pInputModelSortOrder);
-		$pFormModelRecordsFilter->addInputModel($pInputModelRandomSort);
 
 		$pFormModelRecordsFilter->addInputModel($pInputModelListType);
 		$this->addFormModel($pFormModelRecordsFilter);
+
+		$this->addFormModelRecordsSorting();
 
 		$pInputModelTemplate = $pFormModelBuilder->createInputModelTemplate('estate');
 		$pFormModelLayoutDesign = new FormModel();
@@ -167,6 +154,33 @@ class AdminPageEstateListSettings
 		$this->addSortableFieldsList([onOfficeSDK::MODULE_ESTATE], $pFormModelBuilder);
 	}
 
+	private function addFormModelRecordsSorting(){
+        $pFormModelBuilder = new FormModelBuilderDBEstateListSettings();
+        $pInputModelSortBy = $pFormModelBuilder->createInputModelSortBy(onOfficeSDK::MODULE_ESTATE);
+        $pInputModelRandomSort = $pFormModelBuilder->createInputModelRandomSort();
+        $pInputModelSortBySetting = $pFormModelBuilder->createInputModelSortBySetting();
+        $pInputModelSortByChosen = $pFormModelBuilder->createInputModelSortByChosen();
+        $pInputModelSortByDefault = $pFormModelBuilder->createInputModelSortByDefault();
+        $pInputModelSortByspec = $pFormModelBuilder->createInputModelSortBySpec();
+        $pInputModelSortOrder = $pFormModelBuilder->createInputModelSortOrder();
+        $pInputModelListType = $pFormModelBuilder->createInputModelListType();
+
+        $pFormModelRecordsFilter = new FormModel();
+        $pFormModelRecordsFilter->setPageSlug($this->getPageSlug());
+        $pFormModelRecordsFilter->setGroupSlug(self::FORM_VIEW_RECORDS_SORTING);
+        $pFormModelRecordsFilter->setLabel(__('Sorting', 'onoffice-for-wp-websites'));
+        $pFormModelRecordsFilter->addInputModel($pInputModelSortBySetting);
+        $pFormModelRecordsFilter->addInputModel($pInputModelSortByChosen);
+        $pFormModelRecordsFilter->addInputModel($pInputModelSortByDefault);
+        $pFormModelRecordsFilter->addInputModel($pInputModelSortByspec);
+        $pFormModelRecordsFilter->addInputModel($pInputModelSortBy);
+        $pFormModelRecordsFilter->addInputModel($pInputModelSortOrder);
+        $pFormModelRecordsFilter->addInputModel($pInputModelRandomSort);
+
+        $pFormModelRecordsFilter->addInputModel($pInputModelListType);
+        $this->addFormModel($pFormModelRecordsFilter);
+    }
+
 
 	/**
 	 *
@@ -176,6 +190,9 @@ class AdminPageEstateListSettings
 	{
 		$pFormRecordsFilter = $this->getFormModelByGroupSlug(self::FORM_VIEW_RECORDS_FILTER);
 		$this->createMetaBoxByForm($pFormRecordsFilter, 'normal');
+
+        $pFormRecordsFilter = $this->getFormModelByGroupSlug(self::FORM_VIEW_RECORDS_SORTING);
+        $this->createMetaBoxByForm($pFormRecordsFilter, 'normal');
 
 		$pFormPictureTypes = $this->getFormModelByGroupSlug(self::FORM_VIEW_PICTURE_TYPES);
 		$this->createMetaBoxByForm($pFormPictureTypes, 'side');
