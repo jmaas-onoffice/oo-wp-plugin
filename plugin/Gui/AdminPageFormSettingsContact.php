@@ -136,6 +136,22 @@ class AdminPageFormSettingsContact
 			$pFormModelFormSpecific->addInputModel($pInputModel);
 		}
 
+		if ($this->_showCreateInterest) {
+			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEINTEREST);
+			if (empty($pInputModelBuilder->getValues())) {
+				$pInputModel->setValue(true);
+			}
+			$pFormModelFormSpecific->addInputModel($pInputModel);
+		}
+
+		if ($this->_showCreateOwner) {
+			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CREATEOWNER);
+			if (empty($pInputModelBuilder->getValues())) {
+				$pInputModel->setValue(true);
+			}
+			$pFormModelFormSpecific->addInputModel($pInputModel);
+		}
+
 		if ($this->_showCheckDuplicates) {
 			$pInputModel = $pInputModelBuilder->build(InputModelDBFactoryConfigForm::INPUT_FORM_CHECKDUPLICATES);
 			$pFormModelFormSpecific->addInputModel($pInputModel);
