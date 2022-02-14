@@ -267,6 +267,9 @@ class EstateList
 				'listoffset' => $offset
 			];
 		}
+		if ($this->getShowReferenceStatus()) {
+			$requestParams['filter']['referenz'][] = ['op' => '=', 'val' => 1];
+		}
 
 		$requestParams += $this->addExtraParams();
 
@@ -396,10 +399,6 @@ class EstateList
 		if ($this->getShowEstateMarketingStatus()) {
 			$pEstateStatusLabel = $this->_pEnvironment->getEstateStatusLabel();
 			$recordModified['vermarktungsstatus'] = $pEstateStatusLabel->getLabel($recordRaw);
-		}
-
-		if (!$this->getShowReferenceStatus() && $recordModified['vermarktungsstatus'] === 'Reference') {
-			$recordModified['vermarktungsstatus'] = '';
 		}
 
 		$pArrayContainer = new ArrayContainerEscape($recordModified);
