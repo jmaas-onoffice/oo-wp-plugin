@@ -1,0 +1,39 @@
+name: Development build
+
+on:
+  pull_request_review:
+    types: [submitted]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  dev-build:
+    if: github.event.review.state == 'approved'
+    runs-on: ubuntu-latest
+    name: Development build after approving review
+    steps:
+    - name: Checkout from GIT
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.4
+        extensions: mbstring, mysqli, intl, curl #optional, setup extensions
+        coverage: xdebug #optional, setup coverage driver
+
+    - name: Check PHP Version
+      run: php -v
+
+    - name: Composer install
+      run: composer install
+
+    - name: Build development .zip
+      run: PREFIX=/tmp/release make test-zip
+
+    - name: Upload zip
+      uses: actions/upload-artifact@v3
+      with:
+        name: onoffice-$(git describe --tags)
+        path: /tmp/release/onoffice.zip
