@@ -42,6 +42,8 @@ jobs:
     - name: Set version in plugin
       run: sed -i -r "s/Version:\ [^$$]+/Version:\ ${{ env.DEV_BUILD_VERSION }}/" /tmp/release/onoffice/plugin.php
 
+    - run: cat /tmp/release/onoffice/plugin.php
+
     - name: Zip files
       run: (cd /tmp/release/ && zip -r ./onoffice-${{ env.DEV_BUILD_VERSION}}.zip ./onoffice/)  # To prevent nested paths (like /tmp/release/onoffice/readme.txt) we have to cd into the directory.
 
