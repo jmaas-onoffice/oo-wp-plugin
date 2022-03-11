@@ -1,12 +1,10 @@
 name: Development build
 
 on:
-  pull_request_review:
-    types: [submitted]
+  pull_request:
 
 jobs:
   dev-build:
-    if: github.event.review.state == 'approved'
     runs-on: ubuntu-latest
     name: Development build after approving review
     steps:
@@ -15,6 +13,10 @@ jobs:
       with:
         fetch-depth: 0
         submodules: recursive
+
+    - run: git log -10
+
+    - run: git show HEAD^1
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -50,6 +52,7 @@ jobs:
         message: |
           Install the approved version:
           1. Download `please-unpack-onoffice-${{ env.DEV_BUILD_VERSION }}.zip` from https://github.com/jmaas-onoffice/oo-wp-plugin/actions/runs/${{ github.run_id }}.
+            - The version is built like this: v<plugin version>-<commits in this PR>-g<hash of commit the code is from>
           2. Unpack the downloaded file to get another .zip file.
           3. Upload that inner .zip file to WordPress.
         repo-token: ${{ secrets.GITHUB_TOKEN }}
