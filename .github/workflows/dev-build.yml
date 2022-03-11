@@ -31,10 +31,13 @@ jobs:
     - name: Build development .zip
       run: PREFIX=/tmp/release make test-zip
 
+    - name: Set version name
+      run: echo "DEV_BUILD_VERSION=$(git describe --tags)" >> $GITHUB_ENV
+
     - name: Upload zip
       uses: actions/upload-artifact@v3
       with:
-        name: onoffice-${{ git describe --tags }}
+        name: onoffice-${{ env.DEV_BUILD_VERSION }}
         path: /tmp/release/onoffice.zip
 
     - name: Link
