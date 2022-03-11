@@ -36,7 +36,7 @@ jobs:
       run: echo "DEV_BUILD_VERSION=$(git describe --tags)" >> $GITHUB_ENV
 
     - name: Set development version in plugin
-      run: sed -i -r "s/Version:\ [^$$]+/Version:\ ${{ env.DEV_BUILD_VERSION }}/" /home/jojo/code/oo-wp-plugin-fork/plugin.php
+      run: sed -i -r "s/Version:\ [^$$]+/Version:\ ${{ env.DEV_BUILD_VERSION }}/" /tmp/release/onoffice/plugin.php
 
     - name: Zip development build
       run: zip -r /tmp/release/onoffice-${{ env.DEV_BUILD_VERSION }}.zip /tmp/release/onoffice/
