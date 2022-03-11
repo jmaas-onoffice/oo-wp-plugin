@@ -35,7 +35,9 @@ jobs:
       run: PREFIX=/tmp/release make test-zip
 
     - name: Get version name
-      run: echo "DEV_BUILD_VERSION=$(git describe --tags HEAD^1)" >> $GITHUB_ENV  # This runs on a merge commit, so to get the commit that actually triggered the run, we need to take the previous commit.
+      # This runs on a merge commit, but we want the commit before the review.
+      # A merge commit has two parents and the one from the PR seems to be at HEAD^2.
+      run: echo "DEV_BUILD_VERSION=$(git describe --tags HEAD^2)" >> $GITHUB_ENV  
 
     - name: Rename .zip
       run: mv /tmp/release/onoffice.zip /tmp/release/onoffice-${{ env.DEV_BUILD_VERSION}}.zip
