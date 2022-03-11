@@ -43,7 +43,7 @@ jobs:
       run: sed -i -r "s/Version:\ [^$$]+/Version:\ ${{ env.DEV_BUILD_VERSION }}/" /tmp/release/onoffice/plugin.php
 
     - name: Zip files
-      run: zip -r /tmp/release/onoffice-${{ env.DEV_BUILD_VERSION}}.zip /tmp/release/onoffice/
+      run: (cd /tmp/release/ && zip -r ./onoffice-${{ env.DEV_BUILD_VERSION}}.zip ./onoffice/)  # To prevent nested paths (like /tmp/release/onoffice/readme.txt) we have to cd into the directory.
 
     - name: Upload zip
       uses: actions/upload-artifact@v3
