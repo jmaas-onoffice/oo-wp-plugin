@@ -4,7 +4,6 @@ on:
   pull_request_review:
     types: [submitted]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   dev-build:
     if: github.event.review.state == 'approved'
