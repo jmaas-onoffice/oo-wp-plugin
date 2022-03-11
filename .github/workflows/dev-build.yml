@@ -39,7 +39,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: onoffice-${{ env.DEV_BUILD_VERSION }}
-        path: /tmp/release/onoffice.zip
+        path: /tmp/release/onoffice/
 
     - name: Link
       run: echo "${{ github.run_id }}"
