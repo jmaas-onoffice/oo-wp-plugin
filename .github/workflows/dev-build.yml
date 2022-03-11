@@ -1,7 +1,6 @@
 name: Development build
 
 on:
-  pull_request:
   pull_request_review:
     types: [submitted]
 
@@ -33,12 +32,8 @@ jobs:
     - name: Build for development
       run: PREFIX=/tmp/release make test-zip
 
-    - run: git log -10
-
-    - run: echo ${{ github.event.review }}
-
     - name: Get version name
-      run: echo "DEV_BUILD_VERSION=$(git describe --tags ${{ github.sha }})" >> $GITHUB_ENV
+      run: echo "DEV_BUILD_VERSION=$(git describe --tags HEAD^1)" >> $GITHUB_ENV  # This runs on a merge commit, so to get the commit that actually triggered the run, we need to take the previous commit.
 
     - name: Rename .zip
       run: mv /tmp/release/onoffice.zip /tmp/release/onoffice-${{ env.DEV_BUILD_VERSION}}.zip
