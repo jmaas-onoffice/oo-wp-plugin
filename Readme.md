@@ -1,4 +1,5 @@
 # onOffice plugin for WordPress
+Test
 ![Unit tests](https://github.com/onOfficeGmbH/oo-wp-plugin/workflows/Unit%20tests/badge.svg?branch=master)
 
 Integrate real estates, contact forms and contact persons from the onOffice Software into your WordPress website.
