@@ -29,26 +29,28 @@ jobs:
     - name: Composer install
       run: composer install
 
-    - name: Build development .zip
+    - name: Build for development
       run: PREFIX=/tmp/release make test-zip
 
-    - name: Set version name
+    - name: Get version name
       run: echo "DEV_BUILD_VERSION=$(git describe --tags)" >> $GITHUB_ENV
+
+    - name: Set development version in plugin
+      run: sed -i -r "s/Version:\ [^$$]+/Version:\ ${{ env.DEV_BUILD_VERSION }}/" /home/jojo/code/oo-wp-plugin-fork/plugin.php
+
+    - name: Zip development build
+      run: zip -r /tmp/release/onoffice-${{ env.DEV_BUILD_VERSION }}.zip /tmp/release/onoffice/
 
     - name: Upload zip
       uses: actions/upload-artifact@v3
       with:
-        name: onoffice-${{ env.DEV_BUILD_VERSION }}
-        path: /tmp/release/onoffice/
-
-    - name: Link
-      run: echo "${{ github.run_id }}"
+        name: please-unpack-onoffice-${{ env.DEV_BUILD_VERSION }}
+        path: /tmp/release/onoffice.zip  # Uploading a .zip leads to a .zip inside a .zip, but uploading the folder takes significantly longer.
 
     - name: Post comment
       uses: mshick/add-pr-comment@v1
       with:
         message: |
-          Download onoffice-${{ env.DEV_BUILD_VERSION }}.zip from https://github.com/jmaas-onoffice/oo-wp-plugin/actions/runs/${{ github.run_id }}
+          Download please-unpack-onoffice-${{ env.DEV_BUILD_VERSION }}.zip from https://github.com/jmaas-onoffice/oo-wp-plugin/actions/runs/${{ github.run_id }}
+          Then unpack that file to get another .zip file that you can upload to WordPress.
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        repo-token-user-login: 'github-actions[bot]'
-        allow-repeats: false
