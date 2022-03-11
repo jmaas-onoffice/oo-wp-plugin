@@ -34,5 +34,8 @@ jobs:
     - name: Upload zip
       uses: actions/upload-artifact@v3
       with:
-        name: onoffice-$(git describe --tags)
+        name: onoffice-${{ git describe --tags }}
         path: /tmp/release/onoffice.zip
+
+    - name: Link
+      run: echo "${{ github.run_id }}"
