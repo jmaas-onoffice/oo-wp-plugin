@@ -46,9 +46,9 @@ jobs:
 
     - name: Post comment
       uses: mshick/add-pr-comment@v1
-        with:
-          message: |
-            Download onoffice-${{ env.DEV_BUILD_VERSION }}.zip from https://github.com/jmaas-onoffice/oo-wp-plugin/actions/runs/${{ github.run_id }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          repo-token-user-login: 'github-actions[bot]'
-          allow-repeats: false
+      with:
+        message: |
+          Download onoffice-${{ env.DEV_BUILD_VERSION }}.zip from https://github.com/jmaas-onoffice/oo-wp-plugin/actions/runs/${{ github.run_id }}
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        repo-token-user-login: 'github-actions[bot]'
+        allow-repeats: false
