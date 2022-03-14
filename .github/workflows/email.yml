@@ -19,4 +19,5 @@ jobs:
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: Test notification
           to: j.maas@onoffice.de
+          from: WP-Plugin GitHub
           body: ${{ github.event.pull_request.title }}
