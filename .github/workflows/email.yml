@@ -16,7 +16,10 @@ jobs:
           server_port: 465
           username: ${{ secrets.EMAIL_USER }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: Test notification
+          subject: "[WP-Plugin] Review requested for ${{ github.event.pull_request.title }}"
           to: j.maas@onoffice.de
-          from: WP-Plugin GitHub
-          body: ${{ github.event.pull_request.title }}
+          from: WP-Plugin Action
+          body: |
+            1. Open the project for ${{ github.event.pull_request.title }}.
+            2. Set it to "In Bearbeitung" to make your ticket visible.
+            3. The ticket should appear in your tasks.
