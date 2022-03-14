@@ -11,12 +11,7 @@ jobs:
     - name: Checkout from GIT
       uses: actions/checkout@v2
       with:
-        fetch-depth: 0
         submodules: recursive
-
-    - run: git log -10
-
-    - run: git show HEAD^1
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
