@@ -11,6 +11,7 @@ jobs:
     - name: Checkout from GIT
       uses: actions/checkout@v2
       with:
+        fetch-depth: 0
         submodules: recursive
 
     - name: Setup PHP
