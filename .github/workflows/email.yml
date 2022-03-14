@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Send email
     steps:
-      - name: Send mail
+      - name: Send mail test
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: ${{ secrets.EMAIL_SERVER_ADDRESS }}
