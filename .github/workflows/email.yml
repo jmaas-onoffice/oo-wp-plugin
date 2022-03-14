@@ -20,6 +20,10 @@ jobs:
           to: j.maas@onoffice.de
           from: WP-Plugin Action
           body: |
+            A review was requested for a PR on the WordPress plugin repo (https://github.com/${{ github.repository }}).
+
+            Please make your ticket visible:
+
             1. Open the project for ${{ github.event.pull_request.title }}.
-            2. Set it to "In Bearbeitung" to make your ticket visible.
+            2. Set it to "In Bearbeitung".
             3. The ticket should appear in your tasks.
