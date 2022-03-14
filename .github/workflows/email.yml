@@ -1,6 +1,7 @@
 name: Email notification for review request
 
 on:
+  pull_request:
   pull_request_target:
     types: [edited, review_requested]
 
