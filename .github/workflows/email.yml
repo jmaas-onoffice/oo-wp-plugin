@@ -19,10 +19,11 @@ jobs:
           subject: "[WP-Plugin] Review requested for ${{ github.event.pull_request.title }}"
           to: j.maas@onoffice.de
           from: WP-Plugin Action
+          convert_markdown: true
           body: |
-            A review was requested for a PR on the WordPress plugin repo (https://github.com/${{ github.repository }}).
+            A review was requested for a PR on the [WordPress plugin repo](https://github.com/${{ github.repository }}).
 
-            Please make your ticket visible:
+            A ticket was created which you can track on. Please make it visible:
 
             1. Open the project for ${{ github.event.pull_request.title }}.
             2. Set it to "In Bearbeitung".
