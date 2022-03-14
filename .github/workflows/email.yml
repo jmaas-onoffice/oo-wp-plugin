@@ -2,7 +2,7 @@ name: Email notification for review request
 
 on:
   pull_request_target:
-    types: [edited, synchronized, review_requested]
+    types: [review_requested]
 
 jobs:
   notify-review-request:
