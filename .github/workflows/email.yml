@@ -1,0 +1,22 @@
+name: Email notification for review request
+
+on:
+  pull_request_target:
+    types: [review_requested]
+
+jobs:
+  notify-review-request:
+    if: github.event.review.state == 'approved'
+    runs-on: ubuntu-latest
+    name: Development build after approving review
+    steps:
+      - name: Send mail
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.EMAIL_SERVER_ADDRES }}
+          server_port: 465
+          username: ${{ secrets.EMAIL_USER }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: Test notification
+          to: j.maas@onoffice.de
+          body: ${{ github.event.pull_request.title }}
