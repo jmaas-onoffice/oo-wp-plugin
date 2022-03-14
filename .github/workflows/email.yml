@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Send email
     steps:
+      - name: Get project ID
+        run: echo "PROJECT_ID=$(sed -r 's/.*P#([0-9]{5}).*/\1/g')" >> $GITHUB_ENV  
+
       - name: Send mail test
         uses: dawidd6/action-send-mail@v3
         with:
@@ -25,6 +28,6 @@ jobs:
 
             A ticket was created which you can track on. Please make it visible:
 
-            1. Open the project for ${{ github.event.pull_request.title }}. ([Quick link](${{ secrets.REDIRECT_URL }}${'s/.*P#([0-9]{5}).*/\1/g'}))
+            1. Open the project for ${{ github.event.pull_request.title }}. ([Quick link](${{ secrets.REDIRECT_URL }}${{ env.PROJECT_ID }}))
             2. Set it to "In Bearbeitung".
             3. The ticket should appear in your tasks.
