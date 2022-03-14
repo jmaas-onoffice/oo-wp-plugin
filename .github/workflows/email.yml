@@ -25,6 +25,6 @@ jobs:
 
             A ticket was created which you can track on. Please make it visible:
 
-            1. Open the project for ${{ github.event.pull_request.title }}.
+            1. Open the project for ${{ github.event.pull_request.title }}. ([Quick link](${{ secrets.REDIRECT_URL }}${'s/.*P#([0-9]{5}).*/\1/g'}))
             2. Set it to "In Bearbeitung".
             3. The ticket should appear in your tasks.
