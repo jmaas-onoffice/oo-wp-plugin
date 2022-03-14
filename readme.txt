@@ -7,6 +7,8 @@ Requires PHP: 7.0
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
+1
+
 Integrate real estates, contact forms and contact persons from the onOffice Software into your WordPress website.
 
 == Description ==
