@@ -1,14 +1,13 @@
 name: Email notification for review request
 
 on:
-  pull_request:
   pull_request_target:
-    types: [edited, review_requested]
+    types: [edited, synchronized, review_requested]
 
 jobs:
   notify-review-request:
     runs-on: ubuntu-latest
-    name: Development build after approving review
+    name: Send email
     steps:
       - name: Send mail
         uses: dawidd6/action-send-mail@v3
