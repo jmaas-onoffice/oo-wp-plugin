@@ -18,9 +18,9 @@ jobs:
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "[WP-Plugin] Review requested for ${{ github.event.pull_request.title }}"
           to: j.maas@onoffice.de
-          from: WP-Plugin Action
+          from: WP-Plugin GitHub Action
           convert_markdown: true
-          body: |
+          html_body: |
             A review was requested for a PR on the [WordPress plugin repo](https://github.com/${{ github.repository }}).
 
             A ticket was created which you can track on. Please make it visible:
