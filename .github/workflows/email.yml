@@ -6,11 +6,10 @@ on:
 
 jobs:
   notify-review-request:
+    if: ${{ secrets.EMAIL_RECEIVER_GITHUB_USERNAME == github.event.requested_reviewer.login }}
     runs-on: ubuntu-latest
     name: Send email
     steps:
-      - run: ${{ secrets.EMAIL_RECEIVER_GITHUB_USERNAME == github.event.requested_reviewer.login }}
-
       - name: Get project ID
         run: echo "PROJECT_ID=$(echo "${{ github.event.pull_request.title }}" | sed -r 's/.*P#([0-9]{5}).*/\1/g')" >> $GITHUB_ENV  
 
