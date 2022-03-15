@@ -9,7 +9,7 @@ jobs:
   check-reviewer:
     runs-on: ubuntu-latest
     outputs:
-      wants-email: ${{ steps.want-email.outputs.wants-email}}
+      wants-email: ${{ steps.wants-email.outputs.wants-email}}
     steps:
       - id: wants-email
         run: echo "::set-output name=wants-email::${{ contains(fromJSON(secrets.EMAIL_RECEIVER_GITHUB_USERNAMES), github.event.requested_reviewer.login) }}"
