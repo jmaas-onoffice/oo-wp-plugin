@@ -12,7 +12,8 @@ jobs:
       wants-email: ${{ steps.wants-email.outputs.wants-email}}
     steps:
       - id: wants-email
-        run: echo "::set-output name=wants-email::${{ contains(fromJSON(secrets.EMAIL_RECEIVER_GITHUB_USERNAMES), github.event.requested_reviewer.login) }}"
+        # EMAIL_RECEIVER_GITHUB_USERNAME is the GitHub username of the person that should receive the email notification for the review request.
+        run: echo "::set-output name=wants-email::${{ github.event.requested_reviewer.login == secrets.EMAIL_RECEIVER_GITHUB_USERNAME}}"
 
   notify-review-request:
     runs-on: ubuntu-latest
@@ -26,11 +27,15 @@ jobs:
       - name: Send mail test
         uses: dawidd6/action-send-mail@v3
         with:
+          # EMAIL_SERVER_ADDRESS is the URL of the SMTP server. Example: smtp.example.org
           server_address: ${{ secrets.EMAIL_SERVER_ADDRESS }}
           server_port: 465
+          # EMAIL_USER is the username that connects to EMAIL_SERVER_ADDRESS.
           username: ${{ secrets.EMAIL_USER }}
+          # EMAIL_USER is the password that connects to EMAIL_SERVER_ADDRESS.
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "[WP-Plugin] Review requested for ${{ github.event.pull_request.title }}"
+          # EMAIL_RECEIVER_ADDRESS is the email address to send the notification to.
           to: ${{ secrets.EMAIL_RECEIVER_ADDRESS }}
           from: WP-Plugin GitHub Action
           convert_markdown: true
