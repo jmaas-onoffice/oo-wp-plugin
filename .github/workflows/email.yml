@@ -29,5 +29,6 @@ jobs:
             A ticket was created which you can track on. Please make it visible:
 
             1. Open the project for [${{ github.event.pull_request.title }}](${{ github.event.pull_request.url }}). ([Quick link](${{ secrets.REDIRECT_URL }}${{ env.PROJECT_ID }}))
-            2. Set it to "In Bearbeitung".
-            3. The ticket should appear in your tasks.
+            2. Ensure that the link to the PR is present in the project description.
+            3. Set the project's phase to "In Bearbeitung".
+            4. The ticket should appear in your tasks.
