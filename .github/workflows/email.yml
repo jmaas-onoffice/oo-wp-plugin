@@ -5,13 +5,21 @@ on:
     types: [review_requested]
 
 jobs:
+  # We cannot use secrets in `if` conditions for job, so we need to do this workaround.
+  check-reviewer:
+    runs-on: ubuntu-latest
+    outputs:
+      wants-email: ${{ steps.want-email.outputs.wants-email}}
+    steps:
+      - id: wants-email
+        run: echo "::set-output name=wants-email::${{ contains(fromJSON(secrets.EMAIL_RECEIVER_GITHUB_USERNAMES), github.event.requested_reviewer.login) }}"
+
   notify-review-request:
     runs-on: ubuntu-latest
+    needs: check-reviewer
+    if: needs.check-reviewer.wants-email == 'true'
     name: Send email
     steps:
-      - name: Ensure that reviewer wants emails
-        run: ${{ contains(fromJSON(secrets.EMAIL_RECEIVER_GITHUB_USERNAMES), github.event.requested_reviewer.login) }}
-
       - name: Get project ID
         run: echo "PROJECT_ID=$(echo "${{ github.event.pull_request.title }}" | sed -r 's/.*P#([0-9]{5}).*/\1/g')" >> $GITHUB_ENV  
 
