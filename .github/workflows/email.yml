@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     name: Send email
     steps:
+      - run: echo ${{ toJSON(github.event.requested_reviewers) }}
+
       - name: Get project ID
         run: echo "PROJECT_ID=$(echo "${{ github.event.pull_request.title }}" | sed -r 's/.*P#([0-9]{5}).*/\1/g')" >> $GITHUB_ENV  
 
@@ -20,7 +22,7 @@ jobs:
           username: ${{ secrets.EMAIL_USER }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "[WP-Plugin] Review requested for ${{ github.event.pull_request.title }}"
-          to: j.maas@onoffice.de
+          to: ${{ secrets.EMAIL_RECEIVER_ADDRESS }}
           from: WP-Plugin GitHub Action
           convert_markdown: true
           html_body: |
