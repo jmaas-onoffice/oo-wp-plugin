@@ -17,7 +17,7 @@ jobs:
   notify-review-request:
     runs-on: ubuntu-latest
     needs: check-reviewer
-    if: needs.check-reviewer.wants-email == 'true'
+    if: needs.check-reviewer.outputs.wants-email == 'true'
     name: Send email
     steps:
       - name: Get project ID
