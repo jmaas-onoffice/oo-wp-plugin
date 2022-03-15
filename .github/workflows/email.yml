@@ -6,7 +6,7 @@ on:
 
 jobs:
   notify-review-request:
-    if: ${{ contains(fromJSON(secrets.EMAIL_RECEIVER_GITHUB_USERNAMES), github.event.requested_reviewer.login) }}
+    if: secrets.EMAIL_RECEIVER_GITHUB_USERNAME == github.event.requested_reviewer.login
     runs-on: ubuntu-latest
     name: Send email
     steps:
