@@ -19,7 +19,7 @@ jobs:
     needs: check-reviewer
     name: Send email
     steps:
-      - run: echo ${{ needs.check-reviewer.outputs.wants-email }}
+      - run: echo ${{ toJSON(needs) }}
 
       - name: Get project ID
         run: echo "PROJECT_ID=$(echo "${{ github.event.pull_request.title }}" | sed -r 's/.*P#([0-9]{5}).*/\1/g')" >> $GITHUB_ENV  
