@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Send email
     steps:
-      - run: echo ${{ toJSON(github.event.requested_reviewers) }}
+      - run: echo ${{ toJSON(github.event.requested_reviewer) }}
 
       - name: Get project ID
         run: echo "PROJECT_ID=$(echo "${{ github.event.pull_request.title }}" | sed -r 's/.*P#([0-9]{5}).*/\1/g')" >> $GITHUB_ENV  
@@ -31,6 +31,6 @@ jobs:
             A ticket was created which you can track on. Please make it visible:
 
             1. Open the project for [${{ github.event.pull_request.title }}](${{ github.event.pull_request.url }}). ([Quick link](${{ secrets.REDIRECT_URL }}${{ env.PROJECT_ID }}))
-            2. Ensure that the link to the PR is present in the project description.
+            2. Ensure that the link to the PR is present in the project requirements such that the link is easily accessible when working on tickets.
             3. Set the project's phase to "In Bearbeitung".
             4. The ticket should appear in your tasks.
