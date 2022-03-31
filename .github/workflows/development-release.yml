@@ -1,9 +1,7 @@
-name: Release
+name: Development Release
 
 on:
-  push:
-    tags:
-    - 'v*'
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -15,18 +13,10 @@ jobs:
     - name: Checkout from GIT
       uses: actions/checkout@v2
       with:
+        # We need to fetch more than just the most recent commit,
+        # since we later use `git describe`.
+        fetch-depth: 0
         submodules: recursive
-
-    - name: Get plugin version (without leading 'v')
-      run: echo "PLUGIN_VERSION=$(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p')" >> $GITHUB_ENV  
-
-    - name: Setup Deno
-      uses: denoland/setup-deno@v1
-      with:
-        deno-version: v1.x
-
-    - name: Check version
-      run: deno run --allow-read scripts/check-version-in-config-files.ts ${{ env.PLUGIN_VERSION }}
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -39,6 +29,15 @@ jobs:
 
     - name: Build release
       run: PREFIX=/tmp/release make release
+
+    - name: Get stable plugin version (without leading 'v')
+      run: echo "PLUGIN_VERSION_STABLE=$(echo $( git describe --abbrev=0 ) | sed -n 's/v\(\)/\1/p')" >> $GITHUB_ENV  
+
+    - name: Get plugin development version (without leading 'v')
+      run: echo "PLUGIN_VERSION=$(echo $( git describe --tags ) | sed -n 's/v\(\)/\1/p')" >> $GITHUB_ENV  
+
+    - name: Patch version
+      run: 
 
     - name: Make directory for updating SVN
       run: mkdir /tmp/svn
