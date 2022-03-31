@@ -19,7 +19,7 @@ jobs:
 
       - name: Get version
         id: get-version
-        run: echo "::set-output name=version::$(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p')"
+        run: echo "::set-output name=version::${{ github.ref_name }}"
 
   echo:
     name: Echo
