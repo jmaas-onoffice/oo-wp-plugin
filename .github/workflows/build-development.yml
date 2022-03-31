@@ -5,7 +5,8 @@ on:
   workflow_call:
     inputs:
       ref:
-        description: "The ref to check out. When not given, we use actions/chekcout@v2's default behavior."
+        description: "The ref to check out. When not given, we use actions/checkout@v2's default behavior."
+        type: string
         required: false
         default: ''
     outputs:
