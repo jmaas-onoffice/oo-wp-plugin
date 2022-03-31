@@ -46,6 +46,8 @@ jobs:
     - name: Checkout current trunk
       run: svn co ${{ env.SVN_URL }}/trunk .
 
+    - run: cat readme.txt
+
     - run: svn --version
 
     - run: svn log -l 1
@@ -59,6 +61,8 @@ jobs:
 
     - name: Copy release files
       run: cp -r /tmp/release/onoffice/* .
+      
+    - run: cat readme.txt
 
     - name: Add all files to SVN
       run: svn add --force .
