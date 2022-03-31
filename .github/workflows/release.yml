@@ -45,6 +45,8 @@ jobs:
 
     - name: Checkout current trunk
       run: svn co ${{ env.SVN_URL }}/trunk .
+
+    - run: svn info
     
     - name: Remove all files
       # Files that were removed should also be removed from SVN.
