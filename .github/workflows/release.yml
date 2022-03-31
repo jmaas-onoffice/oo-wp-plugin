@@ -43,8 +43,12 @@ jobs:
     - name: Go into new directory
       run: mkdir /tmp/svn && cd /tmp/svn
 
+    - run: pwd
+
     - name: Checkout current trunk
       run: svn co ${{ env.SVN_URL }}/trunk .
+
+    - run: pwd
 
     - run: cat readme.txt
 
@@ -61,7 +65,7 @@ jobs:
 
     - name: Copy release files
       run: cp -r /tmp/release/onoffice/* .
-      
+
     - run: cat readme.txt
 
     - name: Add all files to SVN
