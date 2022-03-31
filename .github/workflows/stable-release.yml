@@ -21,9 +21,9 @@ jobs:
 
     - name: Download release
       uses: actions/download-artifact@v3
-        with:
-          name: release
-          path: /tmp/release
+      with:
+        name: release
+        path: /tmp/release
 
     - name: Unzip release
       working-directory: /tmp/release
