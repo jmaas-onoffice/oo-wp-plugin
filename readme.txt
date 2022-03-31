@@ -4,6 +4,7 @@ Tags: real estate, onoffice
 Requires at least: 4.6
 Tested up to: 5.9
 Requires PHP: 7.0
+Stable tag: 2.22.4
 License: AGPL 3.0
 License URI: https://www.gnu.org/licenses/agpl-3.0.html
 
@@ -74,12 +75,6 @@ Start editing inside the `onoffice-personalized` folder.
 == Screenshots ==
 
 == Changelog ==
-
-= 2.22.5 =
-
-**Fixes**
-
-* When there are no estates that show up on the map, there is no longer a gap in the estate list where the map would be.
 
 = 2.22.4 =
 
