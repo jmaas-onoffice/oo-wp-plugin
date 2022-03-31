@@ -32,7 +32,7 @@ jobs:
     name: Build release
     runs-on: ubuntu-latest
     needs: get-version
-    uses: ./.github/workflows/build-stable.yml
+    uses: ./.github/workflows/build-release.yml
     with:
       expectedVersion: ${{ needs.get-versions.outputs.stableVersion }}
       overrideVersion: ${{ needs.get-versions.ouputs.developmentVersion }}
