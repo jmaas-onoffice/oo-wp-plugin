@@ -6,11 +6,22 @@ on:
     - 'v*'
 
 jobs:
+  get-version:
+    name: Get current version
+    outputs:
+      currenVersion: ${{ steps.get-version.outputs.version}}
+    steps:
+      - name: Get
+        id: get-version
+        run: echo "::set-output name=version::${{ echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p') }}"
+
   build:
+    name: Build release
+    needs: get-version
     uses: ./.github/workflows/build-stable.yml
     with:
       # Remove the leading 'v' from the tag name for the version.
-      expectedVersion: ${{ echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p') }}
+      expectedVersion: ${{ needs.get-version.outputs.version }}
 
   deploy:
     name: Deploy to WordPress SVN
