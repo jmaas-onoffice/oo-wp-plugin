@@ -10,11 +10,12 @@ jobs:
     uses: ./.github/workflows/build-stable.yml
     with:
       # Remove the leading 'v' from the tag name for the version.
-      expectedVersion: $(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p'))
+      expectedVersion: ${{ echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p') }}
 
   deploy:
     name: Deploy to WordPress SVN
     runs-on: ubuntu-latest
+    needs: build
     env:
       SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
     steps:
