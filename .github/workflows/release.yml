@@ -9,18 +9,6 @@ on:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  check-version:
-    name: Check version in config files
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup Deno
-        uses: denoland/setup-deno@v1
-        with:
-          deno-version: v1.x
-      - name: Check versions
-        run: deno run --allow-read scripts/check-version-in-config-files.ts ${{ github.ref_name }}
   deploy:
     name: Deploy WordPress SVN
     runs-on: ubuntu-latest
@@ -31,13 +19,18 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Setup Deno
+      uses: denoland/setup-deno@v1
+      with:
+        deno-version: v1.x
+    - name: Check versions
+      run: deno run --allow-read scripts/check-version-in-config-files.ts ${{ github.ref_name }}
+
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
       with:
         php-version: 7.0
-        extensions: mbstring, mysqli, intl, curl #optional, setup extensions
+        extensions: mbstring, mysqli, intl, curl
 
-    - name: Check PHP Version
-      run: php -v
-    - name: composer install
+    - name: Install dependencies
       run: composer install
