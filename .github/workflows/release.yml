@@ -1,17 +1,16 @@
 name: Release
 
-# Controls when the action will run.
 on:
   push:
-    # Pattern matched against refs/tags
     tags:
     - 'v*'
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   deploy:
     name: Deploy to WordPress SVN
     runs-on: ubuntu-latest
+    env:
+      SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
     steps:
     - name: Checkout from GIT
       uses: actions/checkout@v2
@@ -25,7 +24,8 @@ jobs:
       uses: denoland/setup-deno@v1
       with:
         deno-version: v1.x
-    - name: Check versions
+
+    - name: Check version
       run: deno run --allow-read scripts/check-version-in-config-files.ts ${{ env.PLUGIN_VERSION }}
 
     - name: Setup PHP
@@ -36,3 +36,29 @@ jobs:
 
     - name: Install dependencies
       run: composer install
+
+    - name: Build release
+      run: PREFIX=/tmp/release make release
+
+    - name: Go into new directory
+      run: mkdir /tmp/svn && cd /tmp/svn
+
+    - name: Checkout current trunk
+      run:  svn co ${{ env.SVN_URL }}/trunk .
+    
+    - name: Remove all files
+      # Files that were removed should also be removed from SVN.
+      # To be able to see which files need to be removed, we clean out everything except the '.svn/' folder.
+      run: find . ! -path '.' ! -path './.svn*' -delete
+
+    - name: Copy release files
+      run: cp -r /tmp/release/onoffice/* .
+
+    - name: Inform SVN about removed files
+      # SVN does not automatically detect which files were removed.
+      # 'svn status' returns a list of changed files and "missing" files are marked with a '!' at the beginning of the line.
+      # We apply 'svn rm --force <file path>' on each of those "missing" files so that SVN knows to remove them.
+      # With 'awk' we extract each file name and transform it into the right command, and 'xargs' executes each such command.
+      run: svn status | grep ^! | awk '{$1=""; print " --force \""substr($0,2)"@\"" }' | xargs -r svn rm
+
+    - run: svn status
