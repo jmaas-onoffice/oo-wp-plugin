@@ -1,4 +1,4 @@
-name: Development build
+name: Share development zip
 
 on:
   pull_request_review:
