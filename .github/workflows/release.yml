@@ -34,7 +34,7 @@ jobs:
         php-version: 7.0
         extensions: mbstring, mysqli, intl, curl
 
-    - name: Install dependencies
+    - name: Install development dependencies
       run: composer install
 
     - name: Build release
@@ -44,7 +44,7 @@ jobs:
       run: mkdir /tmp/svn && cd /tmp/svn
 
     - name: Checkout current trunk
-      run:  svn co ${{ env.SVN_URL }}/trunk .
+      run: svn co ${{ env.SVN_URL }}/trunk .
     
     - name: Remove all files
       # Files that were removed should also be removed from SVN.
@@ -53,6 +53,9 @@ jobs:
 
     - name: Copy release files
       run: cp -r /tmp/release/onoffice/* .
+
+    - name: Add all files to SVN
+      run: svn add --force .
 
     - name: Inform SVN about removed files
       # SVN does not automatically detect which files were removed.
