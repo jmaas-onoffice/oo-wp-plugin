@@ -2,78 +2,79 @@ name: Development Build
 
 on:
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      ref:
+        description: "The ref to check out. When not given, we use actions/chekcout@v2's default behavior."
+        required: false
+        default: ''
+    outputs:
+      stableVersion:  
+        description: "The latest stable version number"
+        value: ${{ jobs.get-versions.outputs.developmentVersion }}
+      developmentVersion:
+        description: "The version number identifying this development release"
+        value: ${{ jobs.get-versions.outputs.developmentVersion }}
 
 jobs:
-  deploy:
-    name: Build for development
+  get-versions:
+    name: Get versions
     runs-on: ubuntu-latest
-    env:
-      SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
+    outputs:
+      stableVersion: ${{ steps.get-stable-version.outputs.stableVersion }}
+      developmentVersion: ${{ steps.get-development-version.outputs.developmentVersion }}
     steps:
-    - name: Checkout from GIT
-      uses: actions/checkout@v2
-      with:
-        # We need to fetch more than just the most recent commit,
-        # since we later use `git describe`.
-        fetch-depth: 0
-        submodules: recursive
+      - name: Checkout from GIT
+        uses: actions/checkout@v2
+        with:
+          # We need to fetch more than just the most recent commit,
+          # since we later use `git describe`.
+          fetch-depth: 0
+          ref: ${{ inputs }}
+          
+      - name: Get latest stable plugin version (without leading 'v')
+        id: get-stable-version
+        # Remove the leading 'v' from the tag.
+        run: echo "::set-output name=stableVersion::$(echo $( git describe --tags --abbrev=0 ) | sed -n 's/v\(\)/\1/p')"
 
-    - name: Get latest stable plugin version (without leading 'v')
-      run: echo "PLUGIN_VERSION_STABLE=$(echo $( git describe --tags --abbrev=0 ) | sed -n 's/v\(\)/\1/p')" >> $GITHUB_ENV  
+      - name: Output development version
+        id: get-development-version
+        # Remove the leading 'v'.
+        run: echo "::set-output name=devVersion::$(echo $( git describe --tags ) | sed -n 's/v\(\)/\1/p')"
 
-    - name: Get plugin development version
-      run: echo "PLUGIN_VERSION_DEVELOPMENT=$(echo $( git describe --tags ) | sed -n 's/v\(\)/\1/p')" >> $GITHUB_ENV  
+  build:
+    name: Build release
+    needs: get-version
+    uses: ./.github/workflows/build-stable.yml
+    with:
+      expectedVersion: ${{ needs.get-versions.outputs.stableVersion }}
+  
+  dev-release:
+    name: Development release
+    needs: [get-version, build]
+    steps:
+      - name: Download release
+        uses: actions/download-artifact@v3
+        with:
+          name: release
+          path: /tmp/release
 
-    - name: Setup Deno
-      uses: denoland/setup-deno@v1
-      with:
-        deno-version: v1.x
+      - name: Unzip release
+        working-directory: /tmp/release
+        run: |
+          unzip release.zip
+          rm release.zip
 
-    - name: Check version
-      run: deno run --allow-read scripts/check-version-in-config-files.ts ${{ env.PLUGIN_VERSION_STABLE }}
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: 7.0
-        extensions: mbstring, mysqli, intl, curl
+      - name: Patch version
+        run: 'sed -i "s/Version: ${{ needs.get-versions.outputs.stableVersion }}/Version: ${{ needs.get-versions.outputs.developmentVersion }}/" /tmp/release/onoffice/plugin.php'
 
-    - name: Install development dependencies
-      run: composer install
+      - name: Zip release
+        run: |
+          cd /tmp/release/onoffice
+          zip -r ../release.zip .
 
-    - name: Build release
-      run: PREFIX=/tmp/release make release
-
-    - name: Patch version
-      run: 'sed -i "s/Version: ${{ env.PLUGIN_VERSION_STABLE }}/Version: ${{ env.PLUGIN_VERSION_DEVELOPMENT }}/" /tmp/release/onoffice/plugin.php'
-
-    - name: Make directory for updating SVN
-      run: mkdir /tmp/svn
-
-    - name: Checkout current trunk
-      working-directory: /tmp/svn
-      run: svn co ${{ env.SVN_URL }}/trunk .
-
-    - name: Remove all files
-      working-directory: /tmp/svn
-      # Files that were removed should also be removed from SVN.
-      # To be able to see which files need to be removed, we clean out everything except the '.svn/' folder.
-      run: find . ! -path '.' ! -path './.svn*' -delete
-
-    - name: Copy release files
-      working-directory: /tmp/svn
-      run: cp -r /tmp/release/onoffice/* .
-
-    - name: Add all files to SVN
-      working-directory: /tmp/svn
-      run: svn add --force .
-
-    - name: Inform SVN about removed files
-      working-directory: /tmp/svn
-      # SVN does not automatically detect which files were removed.
-      # 'svn status' returns a list of changed files and "missing" files are marked with a '!' at the beginning of the line.
-      # We apply 'svn rm --force <file path>' on each of those "missing" files so that SVN knows to remove them.
-      # With 'awk' we extract each file name and transform it into the right command, and 'xargs' executes each such command.
-      run: svn status | grep ^! | awk '{$1=""; print " --force \""substr($0,2)"@\"" }' | xargs -r svn rm
-
-    - run: svn status
-      working-directory: /tmp/svn
+      - name: Upload release as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: release
+          path: /tmp/release/release.zip
