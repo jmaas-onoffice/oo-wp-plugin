@@ -46,6 +46,8 @@ jobs:
     - name: Checkout current trunk
       run: svn co ${{ env.SVN_URL }}/trunk .
 
+    - run: svn --version
+
     - run: svn log -l 1
 
     - run: svn info
