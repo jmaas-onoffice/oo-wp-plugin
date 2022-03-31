@@ -1,0 +1,50 @@
+name: Build Stable
+
+on:
+  workflow_call:
+    inputs: 
+      expectedVersion:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: Build Stable
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout from GIT
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+
+    - name: Setup Deno
+      uses: denoland/setup-deno@v1
+      with:
+        deno-version: v1.x
+
+    - name: Check version
+      run: deno run --allow-read scripts/check-version-in-config-files.ts ${{ input.expectedVersion }}
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.0
+        extensions: mbstring, mysqli, intl, curl
+
+    - name: Install development dependencies
+      run: composer install
+
+    - name: Build release
+      run: PREFIX=/tmp/release make release
+
+    - name: Zip release
+      run: |
+        cd /tmp/release/onoffice
+        zip ../release.zip .
+
+    - name: Upload release as artifact
+      uses: actions/upload-artifact@v3
+        with:
+          name: release
+          path: /tmp/release/release.zip
+

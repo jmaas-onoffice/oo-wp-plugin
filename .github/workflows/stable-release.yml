@@ -6,39 +6,30 @@ on:
     - 'v*'
 
 jobs:
+  build:
+    uses: ./.github/workflows/build-stable.yml
+    with:
+      # Remove the leading 'v' from the tag name for the version.
+      expectedVersion: echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p')
+
   deploy:
     name: Deploy to WordPress SVN
     runs-on: ubuntu-latest
     env:
       SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
     steps:
-    - name: Checkout from GIT
-      uses: actions/checkout@v2
-      with:
-        submodules: recursive
 
-    - name: Get plugin version (without leading 'v')
-      run: echo "PLUGIN_VERSION=$(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p')" >> $GITHUB_ENV  
+    - name: Download release
+      uses: actions/download-artifact@v3
+        with:
+          name: release
+          path: /tmp/release
 
-    - name: Setup Deno
-      uses: denoland/setup-deno@v1
-      with:
-        deno-version: v1.x
-
-    - name: Check version
-      run: deno run --allow-read scripts/check-version-in-config-files.ts ${{ env.PLUGIN_VERSION }}
-
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: 7.0
-        extensions: mbstring, mysqli, intl, curl
-
-    - name: Install development dependencies
-      run: composer install
-
-    - name: Build release
-      run: PREFIX=/tmp/release make release
+    - name: Unzip release
+      working-directory: /tmp/release
+      run: |
+        unzip release.zip
+        rm release.zip
 
     - name: Make directory for updating SVN
       run: mkdir /tmp/svn

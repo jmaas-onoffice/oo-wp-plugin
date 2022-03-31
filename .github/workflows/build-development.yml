@@ -1,11 +1,11 @@
-name: Development Release
+name: Development Build
 
 on:
   workflow_dispatch:
 
 jobs:
   deploy:
-    name: Deploy to WordPress SVN
+    name: Build for development
     runs-on: ubuntu-latest
     env:
       SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
