@@ -10,11 +10,12 @@ jobs:
     name: Get current version
     runs-on: ubuntu-latest
     outputs:
-      currenVersion: ${{ steps.get-version.outputs.version}}
+      currenVersion: ${{ steps.get-version.outputs.version }}
     steps:
-      - run: echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p'
+      - run: |
+          echo "test: $(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p'))"
 
-      - run: 'echo "test: $(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p'))"''
+      - run: echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p'
 
       - name: Get version
         id: get-version
