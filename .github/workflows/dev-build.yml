@@ -8,6 +8,7 @@ jobs:
   dev-build:
     if: github.event.review.state == 'approved'
     name: Build development release
+    runs-on: ubuntu-latest
     uses: ./.github/workflows/build-development.yml
     with:
       # The trigger makes this run on a merge commit, but we want to run
@@ -15,8 +16,8 @@ jobs:
       ref: ${{ github.event.pull_request.head.sha }}
   
   comment:
-    runs-on: ubuntu-latest
     name: Pack a development zip and comment on the PR
+    runs-on: ubuntu-latest
     needs: dev-build
     steps:
       - name: Download release
