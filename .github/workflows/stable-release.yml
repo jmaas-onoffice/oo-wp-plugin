@@ -8,6 +8,7 @@ on:
 jobs:
   get-version:
     name: Get current version
+    runs-on: ubuntu-latest
     outputs:
       currenVersion: ${{ steps.get-version.outputs.version}}
     steps:
