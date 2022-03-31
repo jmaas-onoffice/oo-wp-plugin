@@ -19,7 +19,7 @@ jobs:
         submodules: recursive
 
     - name: Get plugin version (without leading 'v')
-      run: echo "PLUGIN_VERSION=$(${{ github.ref_name }} | sed -n "s/v\(\)/\1/p") >> $GITHUB_ENV  
+      run: echo "PLUGIN_VERSION=$(echo ${{ github.ref_name }} | sed -n 's/v\(\)/\1/p')" >> $GITHUB_ENV  
 
     - name: Setup Deno
       uses: denoland/setup-deno@v1
