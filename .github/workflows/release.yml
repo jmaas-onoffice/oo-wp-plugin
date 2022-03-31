@@ -18,12 +18,15 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Get plugin version (without leading 'v')
+      run: echo "PLUGIN_VERSION=$(${{ github.ref_name }} | sed -n "s/v\(\)/\1/p") >> $GITHUB_ENV  
+
     - name: Setup Deno
       uses: denoland/setup-deno@v1
       with:
         deno-version: v1.x
     - name: Check versions
-      run: deno run --allow-read scripts/check-version-in-config-files.ts ${{ github.ref_name }}
+      run: deno run --allow-read scripts/check-version-in-config-files.ts ${{ env.PLUGIN_VERSION }}
 
     - name: Setup PHP
       uses: shivammathur/setup-php@v2

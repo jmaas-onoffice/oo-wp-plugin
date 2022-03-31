@@ -9,16 +9,16 @@ await check();
 async function check() {
   if (Deno.args.length !== 1) {
     console.error(
-      `I expected just the version tag as an argument, but I received ${Deno.args.length} arguments.`,
+      `I expected just the version to check as an argument, but I received ${Deno.args.length} arguments.`,
     );
     Deno.exit(1);
   }
 
-  const tag = Deno.args[0];
-  const newVersion = tag.match(/v(\d+.\d+.\d+)/)?.at(1);
-  if (newVersion === undefined) {
+  const newVersion = Deno.args[0];
+  const isValidVersion = /^\d+.\d+.\d+$/.test(newVersion)
+  if (!isValidVersion) {
     console.error(
-      `The given tag '${tag} is not valid. The commit tag has to be in the form 'v2.13.2'.`,
+      `The given version '${newVersion} is not valid. The version has to be in the form 'v1.2.3'.`,
     );
     Deno.exit(1);
   }
