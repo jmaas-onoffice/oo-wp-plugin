@@ -30,7 +30,7 @@ jobs:
 
   build:
     name: Build release
-    needs: get-version
+    needs: get-versions
     uses: ./.github/workflows/build-release.yml
     with:
       expectedVersion: ${{ needs.get-versions.outputs.stableVersion }}
