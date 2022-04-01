@@ -50,7 +50,7 @@ jobs:
 
       - name: Override version
         if: ${{ inputs.overrideVersion != '' }}
-        run: 'sed -i "s/Version: ${{ inputs.expectedVersion }}/Version: ${{ inputs.overrideVersion }}/" /tmp/release/plugin.php'
+        run: 'sed -i "s/Version: ${{ inputs.expectedVersion }}/Version: ${{ inputs.overrideVersion }}/" /tmp/release/onoffice/plugin.php'
 
       - name: Zip release
         run: |
