@@ -40,6 +40,8 @@ jobs:
     name: Development release
     runs-on: ubuntu-latest
     needs: build
+    env:
+      SVN_URL: https://plugins.svn.wordpress.org/onoffice-for-wp-websites
     steps:
       - name: Download release
         uses: actions/download-artifact@v3

@@ -32,7 +32,6 @@ jobs:
 
   dev-build:
     name: Build development release
-    runs-on: ubuntu-latest
     needs: get-versions
     uses: ./.github/workflows/build-release.yml
     with:
