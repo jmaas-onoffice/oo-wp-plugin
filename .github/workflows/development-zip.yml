@@ -10,11 +10,11 @@ jobs:
   debug:
     runs-on: ubuntu-latest
     steps:
-      - run: echo ${{ toJSON(github.event.issue) }}
-      - run: echo ${{ toJSON(github.event.issue.pull_request) }}
-      - run: echo ${{ github.event.comment.body }}
-      - run: echo ${{ contains(github.event.comment.body, '/zip') }}
-      - run: echo ${{ toJSON(github.event.pull_request) }}
+      - run: echo "${{ toJSON(github.event.issue) }}"
+      - run: echo "${{ toJSON(github.event.issue.pull_request) }}"
+      - run: echo "${{ github.event.comment.body }}"
+      - run: echo "${{ contains(github.event.comment.body, '/zip') }}"
+      - run: echo "${{ toJSON(github.event.pull_request) }}"
 
   get-versions:
     if: (github.event.review && github.event.review.state == 'approved') || (github.event.issue && github.event.issue.pull_request && contains(github.event.comment.body, '/zip'))
@@ -37,14 +37,16 @@ jobs:
         # Remove the leading 'v' from the tag.
         run: echo "::set-output name=stableVersion::$( git describe --tags --abbrev=0 | sed -n 's/v\(\)/\1/p')"
       
-      - run: echo ${{ steps.get-stable-version.outputs.stableVersion }}
+      - name: Output stable version
+        run: echo ${{ steps.get-stable-version.outputs.stableVersion }}
 
       - name: Output development version
         id: get-development-version
         # Remove the leading 'v'.
         run: echo "::set-output name=developmentVersion::$( git describe --tags | sed -n 's/v\(\)/\1/p')"
 
-      - run: echo ${{ steps.get-development-version.outputs.developmentVersion }}
+      - name: Output development version
+        run: echo ${{ steps.get-development-version.outputs.developmentVersion }}
 
   dev-build:
     name: Build development release
