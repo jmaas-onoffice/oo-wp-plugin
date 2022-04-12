@@ -7,15 +7,6 @@ on:
     types: [created, edited]
 
 jobs:
-  debug:
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "${{ toJSON(github.event.issue) }}"
-      - run: echo "${{ toJSON(github.event.issue.pull_request) }}"
-      - run: echo "${{ github.event.comment.body }}"
-      - run: echo "${{ contains(github.event.comment.body, '/zip') }}"
-      - run: echo "${{ toJSON(github.event.pull_request) }}"
-
   get-versions:
     if: (github.event.review && github.event.review.state == 'approved') || (github.event.issue && github.event.issue.pull_request && contains(github.event.comment.body, '/zip'))
     name: Get versions
@@ -30,6 +21,9 @@ jobs:
           # We need to fetch more than just the most recent commit,
           # since we later use `git describe`.
           fetch-depth: 0
+          # When this is a PR review, it runs on a new merge commit.
+          # But we want to run on the latest commit in the PR, since its hash should be used for the development version.
+          # When this is a comment, the default ref is already correctly set to the latest commit.
           ref: ${{ github.event.pull_request.head.sha }}
           
       - name: Get latest stable plugin version (without leading 'v')
@@ -54,8 +48,8 @@ jobs:
     # We cannot use a relative path here, or GitHub Actions does not find the workflow. This might be a bug in GitHub Actions.
     uses: onOfficeGmbH/oo-wp-plugin/.github/workflows/build-release.yml@master
     with:
-      # The trigger makes this run on a merge commit, but we want to run
-      # on the latest commit before the review.
+      # When this is a PR review, it runs on a new merge commit. But we want to run on the latest commit in the PR.
+      # When this is a comment, the default ref is already correctly set to the latest commit.
       ref: ${{ github.event.pull_request.head.sha }}
       expectedVersion: ${{ needs.get-versions.outputs.stableVersion }}
       overrideVersion: ${{ needs.get-versions.outputs.developmentVersion }}
